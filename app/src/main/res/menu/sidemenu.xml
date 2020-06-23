@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:id="@id/notifi"
+        android:icon="@drawable/ic_shopping_cart_black_24dp"
+        android:menuCategory="secondary"
+        android:title="@string/superstore"
+        />
+
+    <item
+        android:id="@+id/partener"
+        android:icon="@drawable/ic_airport_shuttle_black_24dp"
+        android:title="@string/delivery"
+        android:menuCategory="secondary" />
+    <item
+        android:id="@+id/delivery"
+        android:icon="@drawable/ic_accessible_black_24dp"
+        android:title="@string/delivery"
+        android:menuCategory="secondary" />
+    <item
+        android:id="@+id/admin"
+        android:icon="@drawable/ic_person_black_24dp"
+        android:title="@string/admin"
+        android:menuCategory="secondary" />
+
+    <item
+        android:id="@+id/about"
+        android:icon="@drawable/ic_info_outline_black_24dp"
+        android:title="@string/about"
+        android:menuCategory="secondary"
+       />
+    <item
+        android:id="@+id/privacy"
+        android:icon="@drawable/ic_account_balance_wallet_black_24dp"
+        android:title="@string/privacyname"
+        android:menuCategory="secondary" />
+
+
+
+    <item
+        android:title="@string/by"
+        android:menuCategory="secondary">
+        <menu>
+
+            <item android:id="@+id/name"
+              android:menuCategory="secondary"
+
+                android:title="@string/name" />
+        </menu>
+    </item>
+</menu>

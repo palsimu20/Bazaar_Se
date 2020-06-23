@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">Bazaar Se</string>
+    <string name="sub_name">Food and Grocery</string>
+    <string name="navigation_drawer_open">navigation_drawer_open</string>
+    <string name="navigation_drawer_close">navigation_drawer_close</string>
+    <string name="open">please click again</string>
+    <string name="msg">Welcome You!</string>
+    <string name="trya"> Try again</string>
+    <string name="privacyname"> Privacy Policy</string>
+    <string name="admin"> Admin Pannel</string>
+    <string name="name">Er vivek Gupta</string>
+    <string name="exit">exit</string>
+    <string name="share">share</string>
+    <string name="Privacy_policy">Privacy Polic</string>
+    <string name="by">developed By</string>
+    <string name="delivery">
+        Deliver Partner</string>
+    <string name="about">About</string>
+    <string name="go">Go to home</string>
+    <string name="oo">Ooops!</string>
+    <string name="distrubuter">Distributer</string>
+
+    <string name="superstore">Super Store</string>
+    <string name="ibternetmsg">No Internet found. Check your connection or try again!</string>
+    <string name="privacy">We respect your right to privacy.
+        This policy summarizes what personally identifiable information we may collect, and how we might use this information. This policy also describes other important topics relating to your privacy.
+
+Unless otherwise provided herein, the terms of this application privacy policy,
+        as amended from time to time, govern our practices with respect to data collected and used
+        by us in connection with this app. Any personal information that we collect and maintain will be
+        subject to this privacy policy, as amended from time to time. We may change the privacy policy from time to time at our sole discretion. You will be deemed to have been made aware of, and will be subject to, the changes to the privacy policy after such changes have been posted.</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="todo">TODO</string>
+</resources>

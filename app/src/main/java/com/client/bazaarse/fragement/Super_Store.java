@@ -1,0 +1,275 @@
+package com.client.bazaarse.fragement;
+
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import android.os.Handler;
+import android.os.Message;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.Toast;
+
+import com.client.bazaarse.utility.DetectConnection;
+import com.client.bazaarse.activity.MainActivity;
+import com.client.bazaarse.R;
+
+import java.util.Objects;
+
+
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class Super_Store extends Fragment {
+    private WebView webview;
+    private View view;
+    private Context context;
+
+    private SwipeRefreshLayout mySwipeRefreshLayout;
+    private ProgressDialog progressDialog;
+    private LinearLayout first, second;
+    private Button refresh;
+    private static final String url = "http://bazaarse.epizy.com";
+    /* Required empty public constructor */
+    @SuppressLint("HandlerLeak")
+    private Handler handler = new Handler(){
+        @SuppressLint("HandlerLeak")
+        @Override
+        public void handleMessage(Message message) {
+            if (message.what == 1) {
+                webViewGoBack();
+            }
+        }
+    };
+
+    public Super_Store() {
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @SuppressLint("SetJavaScriptEnabled")
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        view = inflater.inflate(R.layout.fragment_super__store, container, false);
+        context = getContext();
+
+        // getWindow().setFeatureInt( Window.FEATURE_PROGRESS, Window.PROGRESS_VISIBILITY_ON);
+        // progressBar =  view.findViewById(R.id.progressBar1);
+
+
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setMessage("Please wait....");
+      //  progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setIndeterminate(true);
+        //  progressDialog.setProgress(0);
+        //progressDialog.show();
+
+
+
+
+        mySwipeRefreshLayout = view.findViewById(R.id.swipeContainer);
+        first = view.findViewById(R.id.lin1);
+        second = view.findViewById(R.id.lin2);
+        mySwipeRefreshLayout.setColorSchemeResources(
+                R.color.colorAccent);
+        webview = view.findViewById(R.id.webview);
+       // webview.getSettings().setUseWideViewPort(true);
+        webview.getSettings().setLoadWithOverviewMode(true);
+        webview.getSettings().setUseWideViewPort(true);
+        refresh = view.findViewById(R.id.refresh);
+        refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isNetworkStatusAvialable(Objects.requireNonNull(getContext()))) {
+                    Toast.makeText(getContext(), "internet available", Toast.LENGTH_SHORT).show();
+
+
+                    Intent refresh = new Intent(context, MainActivity.class);
+                    startActivity(refresh);
+
+                }
+                else
+                {
+                    Toast.makeText(getContext(), " please connect your device via Internet", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+        });
+
+      //  CustomWebViewClient c = new CustomWebViewClient();
+       // webview.setWebViewClient(c);
+        webview.setWebViewClient(new CustomWebViewClient(progressDialog));
+        webview.getSettings().setLoadsImagesAutomatically(true);
+        webview.getSettings().setJavaScriptEnabled(true);
+        webview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+        webview.setOnKeyListener(new View.OnKeyListener(){
+
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK
+                        && event.getAction() == MotionEvent.ACTION_UP
+                        && webview.canGoBack()) {
+                    handler.sendEmptyMessage(1);
+                    return true;
+                }
+
+                return false;
+            }
+
+        });
+
+
+        mySwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mySwipeRefreshLayout.setRefreshing(true);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mySwipeRefreshLayout.setRefreshing(false);
+                        webview.reload();
+                    }
+                }, 3500);
+            }
+        });
+
+
+        //  webview.getSettings().setBuiltInZoomControls(true);
+        if (DetectConnection.checkInternetConnection(Objects.requireNonNull(getContext()))) {
+            first.setVisibility(View.VISIBLE);
+            second.setVisibility(View.GONE);
+
+            final AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+            alertDialog.setTitle("Error");
+            alertDialog.setMessage("Check your internet connection and try again.");
+            alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Try Again", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                  dialog.cancel();
+
+
+                }
+            });
+
+            alertDialog.show();
+        } else {
+            webview.loadUrl(url);
+           //  progressDialog.show();
+        }
+        return view;
+    }
+    private void webViewGoBack(){
+        webview.goBack();
+    }
+
+
+    private class CustomWebViewClient extends WebViewClient {
+        ProgressDialog progressDialog;
+        private CustomWebViewClient(ProgressDialog progressDialog) {
+            this.progressDialog = progressDialog;
+            progressDialog.show();
+        }
+
+
+
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+
+            if (url.contains("http://bazaarse.epizy.com")) {
+                view.loadUrl(url);
+                if (progressDialog.isShowing()) {
+
+                    progressDialog.show();
+                }
+
+
+            } else {
+                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(i);
+            }
+
+
+            return true;
+        }
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon)
+        {
+            progressDialog.show();
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            // TODO Auto-generated method stub
+            super.onPageFinished(view, url);
+
+            if (isNetworkStatusAvialable(Objects.requireNonNull(getContext()))) {
+                progressDialog.dismiss();
+
+            }
+
+
+        }
+
+
+
+        @Override
+        public void onLoadResource(WebView view, String url) {
+
+            if (DetectConnection.checkInternetConnection(context)) {
+                // webview.loadUrl("file:///android_asset/demo.html"); //Change path if it is not correct
+                first.setVisibility(View.VISIBLE);
+                second.setVisibility(View.GONE);
+
+
+            }
+
+        }
+    }
+
+    private static boolean isNetworkStatusAvialable(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null) {
+            NetworkInfo netInfos = connectivityManager.getActiveNetworkInfo();
+            if (netInfos != null)
+                return netInfos.isConnected();
+        }
+        return false;
+
+
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
+}
